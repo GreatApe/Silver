@@ -8,10 +8,14 @@
 
 /* Begin PBXBuildFile section */
 		A485EC502D7E19BC00CD7299 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = A485EC4F2D7E19BC00CD7299 /* ComposableArchitecture */; };
+		A485EC562D7E301000CD7299 /* PicsumListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A485EC552D7E301000CD7299 /* PicsumListItem.swift */; };
+		A485EC5A2D7E302C00CD7299 /* PicsumImageDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = A485EC592D7E302C00CD7299 /* PicsumImageDetails.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		A485EC3D2D7E18C200CD7299 /* Silver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Silver.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A485EC552D7E301000CD7299 /* PicsumListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PicsumListItem.swift; path = Silver/PicsumListItem.swift; sourceTree = "<group>"; };
+		A485EC592D7E302C00CD7299 /* PicsumImageDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicsumImageDetails.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -37,6 +41,8 @@
 		A485EC342D7E18C200CD7299 = {
 			isa = PBXGroup;
 			children = (
+				A485EC592D7E302C00CD7299 /* PicsumImageDetails.swift */,
+				A485EC552D7E301000CD7299 /* PicsumListItem.swift */,
 				A485EC3F2D7E18C200CD7299 /* Silver */,
 				A485EC3E2D7E18C200CD7299 /* Products */,
 			);
@@ -128,6 +134,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A485EC5A2D7E302C00CD7299 /* PicsumImageDetails.swift in Sources */,
+				A485EC562D7E301000CD7299 /* PicsumListItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

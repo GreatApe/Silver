@@ -11,6 +11,8 @@ import ComposableArchitecture
 import Dependencies
 import DependenciesMacros
 
+// MARK: APIClient
+
 @DependencyClient
 struct APIClient {
     var imageList: () async throws -> [PicsumListItem]
@@ -18,17 +20,14 @@ struct APIClient {
     var details: (_ id: String) async throws -> PicsumImageDetails
 }
 
-extension DependencyValues {
-    var apiClient: APIClient {
-        get { self[APIClient.self] }
-        set { self[APIClient.self] = newValue }
-    }
-}
+// MARK: APIClient live
 
 extension APIClient: DependencyKey {
     static var liveValue: APIClient {
         let session = URLSession(configuration: .default)
         let decoder = JSONDecoder()
+
+        // Helper functions
 
         func fetch(_ apiRequest: APIRequest<Data>) async throws -> Data {
             try await fetchData(apiRequest)
@@ -75,6 +74,17 @@ extension APIClient: DependencyKey {
     }
 }
 
+// MARK: DependencyValue
+
+extension DependencyValues {
+    var apiClient: APIClient {
+        get { self[APIClient.self] }
+        set { self[APIClient.self] = newValue }
+    }
+}
+
+// MARK: APIRequest
+
 struct APIRequest<T: Decodable> {
     let method: Method
     let url: URL
@@ -119,6 +129,8 @@ extension APIRequest<PicsumImageDetails> {
     }
 }
 
+// MARK: URLs
+
 private extension URL {
     static let picsumList: URL = URL(string: "https://picsum.photos/v2/list")!
 
@@ -129,59 +141,4 @@ private extension URL {
     static func picsumDetails(id: String) -> URL {
         URL(string: "https://picsum.photos/id/\(id)/info")!
     }
-}
-
-// MARK: PicsumListItem
-
-struct PicsumListItem: Decodable {
-    let id: String
-    let author: String
-    let width: Int
-    let height: Int
-    let url: URL
-    let downloadURL: URL
-
-    enum CodingKeys: String, CodingKey {
-        case id, author, width, height, url
-        case downloadURL = "download_url"
-    }
-}
-
-extension PicsumListItem {
-    static let mock: Self = .init(
-        id: "16",
-        author: "Paul Jarvis",
-        width: 2500,
-        height: 1667,
-        url: URL(string: "https://unsplash.com/photos/gkT4FfgHO5o")!,
-        downloadURL: URL(string: "https://picsum.photos/id/16/2500/1667")!
-    )
-}
-
-// MARK: PicsumImageDetails
-
-/// This is actually identical to `PicsumListItem` but we will pretend it isn't
-struct PicsumImageDetails: Decodable {
-    let id: String
-    let author: String
-    let width: Int
-    let height: Int
-    let url: URL
-    let downloadURL: URL
-
-    enum CodingKeys: String, CodingKey {
-        case id, author, width, height, url
-        case downloadURL = "download_url"
-    }
-}
-
-extension PicsumImageDetails {
-    static let mock: Self = .init(
-        id: "16",
-        author: "Paul Jarvis",
-        width: 2500,
-        height: 1667,
-        url: URL(string: "https://unsplash.com/photos/gkT4FfgHO5o")!,
-        downloadURL: URL(string: "https://picsum.photos/id/16/2500/1667")!
-    )
 }
