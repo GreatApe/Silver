@@ -22,31 +22,51 @@ struct ImageListView: View {
 
     private var listView: some View {
         List {
-            ForEach(store.images) { image in
-                HStack {
-                    Text("Author: \(image.author)")
-
-                    Spacer()
-
-                    let url = image.downloadURL.filling(width: store.thumbnailWidth, height: store.thumbnailHeight)
-                    AsyncImage(url: .picsumImage(url)) { image in
-                        image
-                            .resizable()
-                            .frame(width: CGFloat(store.thumbnailWidth), height: CGFloat(store.thumbnailHeight))
-                    } placeholder: {
-                        ProgressView()
-                            .frame(width: CGFloat(store.thumbnailWidth), height: CGFloat(store.thumbnailHeight))
+            ForEach(store.sections) { section in
+                Section(section.author) {
+                    ForEach(section.rows, id: \.image.id) { row in
+                        ThumbnailRowView(row: row, width: store.thumbnailWidth, height: store.thumbnailHeight)
                     }
-
                 }
             }
-        }
-        .swipeActions(edge: .trailing) {
-            Image(systemName: "star")
         }
         .scrollIndicators(.never)
         .refreshable {
             await store.send(.pulledToRefresh).finish()
+        }
+    }
+}
+
+struct ThumbnailRowView: View {
+    let row: ThumbnailRowModel
+    let width: Int
+    let height: Int
+
+    var body: some View {
+        HStack {
+            let url = row.image.downloadURL.filling(width: width, height: height)
+            AsyncImage(url: .picsumImage(url)) { image in
+                image
+                    .resizable()
+                    .frame(width: CGFloat(width), height: CGFloat(height))
+                    .overlay(alignment: .topLeading) {
+                        if row.favorite {
+                            Image(systemName: "star")
+                                .foregroundStyle(.yellow)
+                                .font(.system(size: 20))
+                        }
+                    }
+            } placeholder: {
+                ProgressView()
+                    .frame(width: CGFloat(width), height: CGFloat(height))
+            }
+
+            Spacer()
+
+            VStack(alignment: .trailing) {
+                Text("Width: \(row.image.downloadURL.width)")
+                Text("Height: \(row.image.downloadURL.height)")
+            }
         }
     }
 }
@@ -59,20 +79,14 @@ struct ImageListFeature {
         var thumbnailWidth: Int = 100
         var thumbnailHeight: Int = 70
 
-        var images: [PicsumListItem] = []
+        var sections: [ThumbnailSection] = []
 
         // Computed
-
-//        var thumbnailURLs: [PicsumImageURL] {
-//            images.map { image in
-//                image.downloadURL.filling(width: thumbnailWidth, height: thumbnailHeight)
-//            }
-//        }
 
         var title: String {
             switch status {
             case .idle, .loadedList:
-                "\(images.count) images"
+                "\(sections.count) authors, \(sections.flatMap(\.rows).count) images"
             case .loadingList:
                 "Loading"
             case .failedToLoadList:
@@ -118,7 +132,7 @@ struct ImageListFeature {
                 return .none
 
             case .loadedList(let images):
-                state.images = images
+                state.sections = images.thumbnailSections(favorites: ["16"])
                 state.status = .loadedList
                 return .none
 
@@ -138,4 +152,24 @@ struct ImageListFeature {
             await send(.setStatus(.failedToLoadList))
         }
     }
+}
+
+extension [PicsumListItem] {
+    func thumbnailSections(favorites: Set<PicsumImageURL.ID>) -> [ThumbnailSection] {
+        let rows = map { ThumbnailRowModel(image: $0, favorite: favorites.contains($0.id)) }
+        return Dictionary(grouping: rows, by: \.image.author)
+            .sorted { $0.key < $1.key }
+            .map(ThumbnailSection.init)
+    }
+}
+
+struct ThumbnailSection: Identifiable, Equatable {
+    var id: String { author }
+    let author: String
+    var rows: [ThumbnailRowModel]
+}
+
+struct ThumbnailRowModel: Equatable {
+    let image: PicsumListItem
+    var favorite: Bool
 }
