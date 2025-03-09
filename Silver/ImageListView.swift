@@ -8,12 +8,6 @@
 import SwiftUI
 import ComposableArchitecture
 
-extension SharedKey where Self == InMemoryKey<Set<PicsumImageURL.ID>> {
-    static var favorites: Self {
-        inMemory("favorites")
-    }
-}
-
 struct ImageListView: View {
     let store: StoreOf<ImageListFeature>
 
@@ -36,18 +30,20 @@ struct ImageListView: View {
         }
     }
 
-    @Shared(.favorites) var favorites: Set<PicsumImageURL.ID> = ["16"]
+    @Shared(.favorites) var favorites: Set<PicsumImageURL.ID> = []
 
     private var listView: some View {
         List {
             ForEach(store.sections) { section in
                 Section(section.author) {
-                    ForEach(section.rows, id: \.image.id) { row in
+                    ForEach(section.rows) { row in
                         Button {
-                            store.send(.rowTapped(row.image.id))
+                            store.send(.rowTapped(row.id))
                         } label: {
-                            ThumbnailRowView(row: row, width: store.thumbnailWidth, height: store.thumbnailHeight)
-                                .border(favorites.contains(row.image.id) ? .green : .red)
+                            let width = store.thumbnailWidth
+                            let height = store.thumbnailHeight
+                            let isFavorite = favorites.contains(row.id)
+                            ThumbnailRowView(row: row, isFavorite: isFavorite, width: width, height: height)
                         }
                     }
                 }
@@ -60,19 +56,20 @@ struct ImageListView: View {
 }
 
 struct ThumbnailRowView: View {
-    let row: ThumbnailRowModel
+    let row: PicsumListItem
+    let isFavorite: Bool
     let width: Int
     let height: Int
 
     var body: some View {
         HStack {
-            let url = row.image.downloadURL.filling(width: width, height: height)
+            let url = row.downloadURL.filling(width: width, height: height)
             AsyncImage(url: .picsumImage(url)) { image in
                 image
                     .resizable()
                     .frame(width: CGFloat(width), height: CGFloat(height))
                     .overlay(alignment: .topLeading) {
-                        if row.favorite {
+                        if isFavorite {
                             Image(systemName: "star.fill")
                                 .foregroundStyle(.yellow)
                                 .font(.system(size: 20))
@@ -87,8 +84,8 @@ struct ThumbnailRowView: View {
             Spacer()
 
             VStack(alignment: .trailing) {
-                Text("Width: \(row.image.downloadURL.width)")
-                Text("Height: \(row.image.downloadURL.height)")
+                Text("Width: \(row.downloadURL.width)")
+                Text("Height: \(row.downloadURL.height)")
             }
         }
     }

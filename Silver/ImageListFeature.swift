@@ -55,7 +55,7 @@ struct ImageListFeature {
     }
 
     @Dependency(\.apiClient) private var apiClient
-    @Shared(.inMemory("favorites")) var favorites: Set<PicsumImageURL.ID> = ["16"]
+    @Shared(.favorites) var favorites: Set<PicsumImageURL.ID> = []
 
     var body: some Reducer<State, Action> {
         Reduce { state, action in
@@ -75,7 +75,7 @@ struct ImageListFeature {
                 return .none
 
             case .loadedList(let images):
-                state.sections = images.thumbnailSections(favorites: ["16"])
+                state.sections = images.thumbnailSections()
                 state.status = .loadedList
                 return .none
 
@@ -97,10 +97,15 @@ struct ImageListFeature {
     }
 }
 
+extension SharedKey where Self == InMemoryKey<Set<PicsumImageURL.ID>> {
+    static var favorites: Self {
+        inMemory("favorites")
+    }
+}
+
 extension [PicsumListItem] {
-    func thumbnailSections(favorites: Set<PicsumImageURL.ID>) -> [ThumbnailSection] {
-        let rows = map { ThumbnailRowModel(image: $0, favorite: favorites.contains($0.id)) }
-        return Dictionary(grouping: rows, by: \.image.author)
+    func thumbnailSections() -> [ThumbnailSection] {
+        return Dictionary(grouping: self, by: \.author)
             .sorted { $0.key < $1.key }
             .map(ThumbnailSection.init)
     }
@@ -109,10 +114,5 @@ extension [PicsumListItem] {
 struct ThumbnailSection: Identifiable, Equatable {
     var id: String { author }
     let author: String
-    var rows: [ThumbnailRowModel]
-}
-
-struct ThumbnailRowModel: Equatable {
-    let image: PicsumListItem
-    var favorite: Bool
+    let rows: [PicsumListItem]
 }
