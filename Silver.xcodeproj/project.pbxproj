@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A485EC502D7E19BC00CD7299 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = A485EC4F2D7E19BC00CD7299 /* ComposableArchitecture */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		A485EC3D2D7E18C200CD7299 /* Silver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Silver.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -23,6 +27,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A485EC502D7E19BC00CD7299 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,6 +70,7 @@
 			);
 			name = Silver;
 			packageProductDependencies = (
+				A485EC4F2D7E19BC00CD7299 /* ComposableArchitecture */,
 			);
 			productName = Silver;
 			productReference = A485EC3D2D7E18C200CD7299 /* Silver.app */;
@@ -94,6 +100,9 @@
 			);
 			mainGroup = A485EC342D7E18C200CD7299;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A485EC4E2D7E19BC00CD7299 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = A485EC3E2D7E18C200CD7299 /* Products */;
 			projectDirPath = "";
@@ -324,6 +333,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A485EC4E2D7E19BC00CD7299 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 1.18.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A485EC4F2D7E19BC00CD7299 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A485EC4E2D7E19BC00CD7299 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = A485EC352D7E18C200CD7299 /* Project object */;
 }
