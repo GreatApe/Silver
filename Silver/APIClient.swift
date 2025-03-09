@@ -16,8 +16,8 @@ import DependenciesMacros
 @DependencyClient
 struct APIClient {
     var imageList: () async throws -> [PicsumListItem]
-    var image: (_ image: PicsumImage) async throws -> Image
-    var details: (_ id: String) async throws -> PicsumImageDetails
+    var image: (_ image: PicsumImageURL) async throws -> Image
+    var details: (_ id: PicsumImageURL.ID) async throws -> PicsumImageDetails
 }
 
 // MARK: APIClient live
@@ -112,7 +112,7 @@ extension APIRequest<[PicsumListItem]> {
 }
 
 extension APIRequest<Data> {
-    static func picsumImage(_ image: PicsumImage) -> APIRequest {
+    static func picsumImage(_ image: PicsumImageURL) -> APIRequest {
         .init(
             method: .get,
             url: .picsumImage(image)
@@ -121,7 +121,7 @@ extension APIRequest<Data> {
 }
 
 extension APIRequest<PicsumImageDetails> {
-    static func picsumDetails(id: String) -> APIRequest {
+    static func picsumDetails(id: PicsumImageURL.ID) -> APIRequest {
         .init(
             method: .get,
             url: .picsumDetails(id: id)
@@ -134,11 +134,11 @@ extension APIRequest<PicsumImageDetails> {
 extension URL {
     static let picsumList: URL = URL(string: "https://\(picsumHost)/v2/list")!
 
-    static func picsumImage(_ image: PicsumImage) -> URL {
+    static func picsumImage(_ image: PicsumImageURL) -> URL {
         URL(string: "https://\(picsumHost)/id/\(image.id)/\(image.width)/\(image.height)")!
     }
 
-    static func picsumDetails(id: String) -> URL {
+    static func picsumDetails(id: PicsumImageURL.ID) -> URL {
         URL(string: "https://\(picsumHost)/id/\(id)/info")!
     }
 

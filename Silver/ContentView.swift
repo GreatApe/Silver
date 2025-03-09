@@ -6,28 +6,13 @@
 //
 
 import SwiftUI
-import Dependencies
+import ComposableArchitecture
 
 struct ContentView: View {
-    @State private var image = Image(systemName: "globe")
-
     var body: some View {
-        VStack {
-            image
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
-        .task {
-            do {
-                @Dependency(\.apiClient) var apiClient
-
-                image = try await apiClient.image(.init(id: "16", width: 300, height: 200))
-            } catch {
-                print("Error: \(error)")
-            }
-        }
+        ImageListView(store: Store(initialState: .init()) {
+            ImageListFeature()
+        })
     }
 }
 
