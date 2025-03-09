@@ -16,7 +16,7 @@ import DependenciesMacros
 @DependencyClient
 struct APIClient {
     var imageList: () async throws -> [PicsumListItem]
-    var image: (_ id: String, _ x: Int, _ y: Int) async throws -> Image
+    var image: (_ image: PicsumImage) async throws -> Image
     var details: (_ id: String) async throws -> PicsumImageDetails
 }
 
@@ -56,8 +56,8 @@ extension APIClient: DependencyKey {
             imageList: {
                 try await fetch(.picsumList)
             },
-            image: { id, x, y in
-                let imageData = try await fetch(.picsumImage(id: id, x: x, y: y))
+            image: { image in
+                let imageData = try await fetch(.picsumImage(image))
                 guard let uiImage = UIImage(data: imageData) else {
                     throw ClientError.failedToCreateUIImage
                 }
@@ -112,10 +112,10 @@ extension APIRequest<[PicsumListItem]> {
 }
 
 extension APIRequest<Data> {
-    static func picsumImage(id: String, x: Int, y: Int) -> APIRequest {
+    static func picsumImage(_ image: PicsumImage) -> APIRequest {
         .init(
             method: .get,
-            url: .picsumImage(id: id, x: x, y: y)
+            url: .picsumImage(image)
         )
     }
 }
@@ -131,14 +131,16 @@ extension APIRequest<PicsumImageDetails> {
 
 // MARK: URLs
 
-private extension URL {
-    static let picsumList: URL = URL(string: "https://picsum.photos/v2/list")!
+extension URL {
+    static let picsumList: URL = URL(string: "https://\(picsumHost)/v2/list")!
 
-    static func picsumImage(id: String, x: Int, y: Int) -> URL {
-        URL(string: "https://picsum.photos/id/\(id)/\(x)/\(y)")!
+    static func picsumImage(_ image: PicsumImage) -> URL {
+        URL(string: "https://\(picsumHost)/id/\(image.id)/\(image.width)/\(image.height)")!
     }
 
     static func picsumDetails(id: String) -> URL {
-        URL(string: "https://picsum.photos/id/\(id)/info")!
+        URL(string: "https://\(picsumHost)/id/\(id)/info")!
     }
+
+    static let picsumHost: String = "picsum.photos"
 }

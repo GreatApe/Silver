@@ -22,8 +22,8 @@ struct ContentView: View {
         .task {
             do {
                 @Dependency(\.apiClient) var apiClient
-//                let list = try await apiClient.imageList()
-                image = try await apiClient.image(id: "16", x: 200, y: 200)
+
+                image = try await apiClient.image(.init(id: "16", width: 300, height: 200))
             } catch {
                 print("Error: \(error)")
             }
