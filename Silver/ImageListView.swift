@@ -22,13 +22,14 @@ struct ImageListView: View {
 
     private var listView: some View {
         List {
-            ForEach(store.images) { thumbnail in
+            ForEach(store.images) { image in
                 HStack {
-                    Text("Author: \(thumbnail.author)")
+                    Text("Author: \(image.author)")
 
                     Spacer()
 
-                    AsyncImage(url: .picsumImage(thumbnail.image)) { image in
+                    let url = image.downloadURL.filling(width: store.thumbnailWidth, height: store.thumbnailHeight)
+                    AsyncImage(url: .picsumImage(url)) { image in
                         image
                             .resizable()
                             .frame(width: CGFloat(store.thumbnailWidth), height: CGFloat(store.thumbnailHeight))
@@ -58,7 +59,15 @@ struct ImageListFeature {
         var thumbnailWidth: Int = 100
         var thumbnailHeight: Int = 70
 
-        var images: IdentifiedArrayOf<Thumbnail> = []
+        var images: [PicsumListItem] = []
+
+        // Computed
+
+//        var thumbnailURLs: [PicsumImageURL] {
+//            images.map { image in
+//                image.downloadURL.filling(width: thumbnailWidth, height: thumbnailHeight)
+//            }
+//        }
 
         var title: String {
             switch status {
@@ -90,7 +99,7 @@ struct ImageListFeature {
 
         // System:
 
-        case loadedList(IdentifiedArrayOf<Thumbnail>)
+        case loadedList([PicsumListItem])
         case setStatus(State.Status)
     }
 
@@ -100,10 +109,10 @@ struct ImageListFeature {
         Reduce { state, action in
             switch action {
             case .viewAppeared:
-                return loadList(width: state.thumbnailWidth, height: state.thumbnailHeight)
+                return loadList()
 
             case .pulledToRefresh:
-                return loadList(width: state.thumbnailWidth, height: state.thumbnailHeight)
+                return loadList()
 
             case .imageTapped(let id):
                 return .none
@@ -120,12 +129,11 @@ struct ImageListFeature {
         }
     }
 
-    private func loadList(width: Int, height: Int) -> Effect<Action> {
+    private func loadList() -> Effect<Action> {
         .run { send in
             await send(.setStatus(.loadingList))
             let images = try await apiClient.imageList()
-                .map { Thumbnail(author: $0.author, image: $0.downloadURL.filling(width: width, height: height)) }
-            await send(.loadedList(IdentifiedArray(images) { $1 }))
+            await send(.loadedList(images))
         } catch: { error, send in
             await send(.setStatus(.failedToLoadList))
         }

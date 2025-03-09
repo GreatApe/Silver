@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: PicsumListItem
 
-struct PicsumListItem: Decodable, Identifiable {
+struct PicsumListItem: Decodable, Identifiable, Equatable {
     let id: String
     let author: String
     let width: Int
