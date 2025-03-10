@@ -33,6 +33,9 @@ struct ImageDetailsView: View {
                 }
             }
         }
+        .refreshable {
+            store.send(.pulledToRefresh)
+        }
         .navigationTitle(store.author)
         .frame(maxWidth: .infinity)
         .onGeometryChange(for: CGFloat.self, of: \.size.width) { width in
@@ -40,9 +43,6 @@ struct ImageDetailsView: View {
         }
         .onAppear {
             store.send(.viewAppeared)
-        }
-        .refreshable {
-            await store.send(.pulledToRefresh).finish()
         }
     }
 

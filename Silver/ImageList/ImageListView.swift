@@ -14,45 +14,48 @@ struct ImageListView: View {
 
     var body: some View {
         NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
-            switch store.status {
-            case .idle, .loadedList:
-                listView
-            case .loadingList:
-                ProgressView()
-            case .failedToLoadList:
-                Text("Failed to load")
-                    .foregroundStyle(.red)
+            List {
+                switch store.status {
+                case .idle, .loadedList:
+                    listView
+                case .loadingList:
+                    ProgressView()
+                case .failedToLoadList:
+                    Text("Failed to load")
+                        .foregroundStyle(.red)
+                }
+            }
+            .navigationTitle(store.title)
+            .onAppear {
+                store.send(.viewAppeared)
             }
         } destination: { detailsStore in
             ImageDetailsView(store: detailsStore)
         }
-        .navigationTitle(store.title)
-        .onAppear {
-            store.send(.viewAppeared)
+        .refreshable {
+            Task {
+                await store.send(.pulledToRefresh).finish()
+            }
         }
+        .animation(.default, value: store.status)
     }
 
     @Shared(.favorites) var favorites: Set<PicsumImageURL.ID> = []
 
     private var listView: some View {
-        List {
-            ForEach(store.sections) { section in
-                Section(section.author) {
-                    ForEach(section.rows) { row in
-                        Button {
-                            store.send(.rowTapped(row.id))
-                        } label: {
-                            let width = store.thumbnailWidth
-                            let height = store.thumbnailHeight
-                            let isFavorite = favorites.contains(row.id)
-                            ThumbnailRowView(row: row, isFavorite: isFavorite, width: width, height: height)
-                        }
+        ForEach(store.sections) { section in
+            Section(section.author) {
+                ForEach(section.rows) { row in
+                    Button {
+                        store.send(.rowTapped(row.id))
+                    } label: {
+                        let width = store.thumbnailWidth
+                        let height = store.thumbnailHeight
+                        let isFavorite = favorites.contains(row.id)
+                        ThumbnailRowView(row: row, isFavorite: isFavorite, width: width, height: height)
                     }
                 }
             }
-        }
-        .refreshable {
-            await store.send(.pulledToRefresh).finish()
         }
     }
 }

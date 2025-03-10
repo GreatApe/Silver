@@ -59,7 +59,6 @@ struct ImageDetailsFeature {
 
             case .loadedDetails(let details):
                 state.details = details
-                print("Loaded details: \(details)")
                 return .none
 
             case .setStatus(let status):
