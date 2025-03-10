@@ -10,7 +10,7 @@ import Foundation
 // MARK: PicsumImageDetails
 
 /// This is actually identical to `PicsumListItem` but we will pretend it isn't
-struct PicsumImageDetails: Decodable {
+struct PicsumImageDetails: Decodable, Equatable {
     let id: String
     let author: String
     let width: Int

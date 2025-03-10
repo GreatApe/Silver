@@ -11,8 +11,8 @@
 		A485EC562D7E301000CD7299 /* PicsumListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = A485EC552D7E301000CD7299 /* PicsumListItem.swift */; };
 		A485EC5A2D7E302C00CD7299 /* PicsumImageDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = A485EC592D7E302C00CD7299 /* PicsumImageDetails.swift */; };
 		A485EC5C2D7E36FA00CD7299 /* PicsumImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A485EC5B2D7E36FA00CD7299 /* PicsumImage.swift */; };
-		A485EC5E2D7E3CB400CD7299 /* ImageListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A485EC5D2D7E3CB400CD7299 /* ImageListView.swift */; };
-		A485EC622D7E5A4800CD7299 /* ImageListFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = A485EC612D7E5A4800CD7299 /* ImageListFeature.swift */; };
+		A485EC662D7E646800CD7299 /* ImageDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A485EC652D7E646800CD7299 /* ImageDetailsView.swift */; };
+		A485EC6A2D7E64B200CD7299 /* ImageDetailsFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = A485EC692D7E64B200CD7299 /* ImageDetailsFeature.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,14 +20,14 @@
 		A485EC552D7E301000CD7299 /* PicsumListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PicsumListItem.swift; path = Silver/PicsumListItem.swift; sourceTree = "<group>"; };
 		A485EC592D7E302C00CD7299 /* PicsumImageDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicsumImageDetails.swift; sourceTree = "<group>"; };
 		A485EC5B2D7E36FA00CD7299 /* PicsumImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicsumImage.swift; sourceTree = "<group>"; };
-		A485EC5D2D7E3CB400CD7299 /* ImageListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageListView.swift; path = Silver/ImageListView.swift; sourceTree = "<group>"; };
-		A485EC612D7E5A4800CD7299 /* ImageListFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageListFeature.swift; path = Silver/ImageListFeature.swift; sourceTree = "<group>"; };
+		A485EC652D7E646800CD7299 /* ImageDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageDetailsView.swift; path = Silver/ImageDetailsView.swift; sourceTree = "<group>"; };
+		A485EC692D7E64B200CD7299 /* ImageDetailsFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ImageDetailsFeature.swift; path = Silver/ImageDetailsFeature.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		A485EC3F2D7E18C200CD7299 /* Silver */ = {
+		A485EC702D7E652500CD7299 /* ImageDetails */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Silver;
+			path = ImageDetails;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -47,12 +47,12 @@
 		A485EC342D7E18C200CD7299 = {
 			isa = PBXGroup;
 			children = (
-				A485EC612D7E5A4800CD7299 /* ImageListFeature.swift */,
-				A485EC5D2D7E3CB400CD7299 /* ImageListView.swift */,
+				A485EC652D7E646800CD7299 /* ImageDetailsView.swift */,
+				A485EC692D7E64B200CD7299 /* ImageDetailsFeature.swift */,
 				A485EC5B2D7E36FA00CD7299 /* PicsumImage.swift */,
 				A485EC592D7E302C00CD7299 /* PicsumImageDetails.swift */,
 				A485EC552D7E301000CD7299 /* PicsumListItem.swift */,
-				A485EC3F2D7E18C200CD7299 /* Silver */,
+				A485EC702D7E652500CD7299 /* ImageDetails */,
 				A485EC3E2D7E18C200CD7299 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -81,7 +81,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				A485EC3F2D7E18C200CD7299 /* Silver */,
+				A485EC702D7E652500CD7299 /* ImageDetails */,
 			);
 			name = Silver;
 			packageProductDependencies = (
@@ -143,10 +143,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A485EC5E2D7E3CB400CD7299 /* ImageListView.swift in Sources */,
+				A485EC662D7E646800CD7299 /* ImageDetailsView.swift in Sources */,
 				A485EC5C2D7E36FA00CD7299 /* PicsumImage.swift in Sources */,
 				A485EC5A2D7E302C00CD7299 /* PicsumImageDetails.swift in Sources */,
-				A485EC622D7E5A4800CD7299 /* ImageListFeature.swift in Sources */,
+				A485EC6A2D7E64B200CD7299 /* ImageDetailsFeature.swift in Sources */,
 				A485EC562D7E301000CD7299 /* PicsumListItem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

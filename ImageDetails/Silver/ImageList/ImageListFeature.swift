@@ -18,6 +18,8 @@ struct ImageListFeature {
 
         var sections: [ThumbnailSection] = []
 
+        var path = StackState<ImageDetailsFeature.State>()
+
         // Helpers
 
         var title: String {
@@ -37,10 +39,6 @@ struct ImageListFeature {
             case loadedList
             case failedToLoadList
         }
-
-//        enum Page: Hashable {
-//            case details(Thumbnail)
-//        }
     }
 
     enum Action {
@@ -49,9 +47,11 @@ struct ImageListFeature {
         case rowTapped(PicsumImageURL.ID)
 
         // System:
-
         case loadedList([PicsumListItem])
         case setStatus(State.Status)
+
+        // Navigation
+        case path(StackActionOf<ImageDetailsFeature>)
     }
 
     @Dependency(\.apiClient) private var apiClient
@@ -67,11 +67,12 @@ struct ImageListFeature {
                 return loadList()
 
             case .rowTapped(let id):
-                $favorites.withLock {
-                    if $0.remove(id) == nil {
-                        $0.insert(id)
-                    }
+                guard let image = state.sections.flatMap(\.rows).first(where: { $0.id == id }) else {
+                    assertionFailure("Should not be possible")
+                    return .none
                 }
+
+                state.path.append(.init(url: image.downloadURL))
                 return .none
 
             case .loadedList(let images):
@@ -82,7 +83,13 @@ struct ImageListFeature {
             case .setStatus(let status):
                 state.status = status
                 return .none
+
+            case .path:
+                return .none
             }
+        }
+        .forEach(\.path, action: \.path) {
+            ImageDetailsFeature()
         }
     }
 

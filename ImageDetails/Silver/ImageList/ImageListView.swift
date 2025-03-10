@@ -9,11 +9,11 @@ import SwiftUI
 import ComposableArchitecture
 
 struct ImageListView: View {
-    let store: StoreOf<ImageListFeature>
+    @Bindable
+    var store: StoreOf<ImageListFeature>
 
     var body: some View {
-//        NavigationStack(path: <#T##Binding<Store<StackState<ObservableState>, StackAction<ObservableState, Action>>>#>, root: <#T##() -> View#>, destination: <#T##(Store<ObservableState, Action>) -> View#>)
-        ZStack {
+        NavigationStack(path: $store.scope(state: \.path, action: \.path)) {
             switch store.status {
             case .idle, .loadedList:
                 listView
@@ -23,6 +23,8 @@ struct ImageListView: View {
                 Text("Failed to load")
                     .foregroundStyle(.red)
             }
+        } destination: { detailsStore in
+            ImageDetailsView(store: detailsStore)
         }
         .navigationTitle(store.title)
         .onAppear {
