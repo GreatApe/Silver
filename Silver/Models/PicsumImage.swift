@@ -11,6 +11,10 @@ struct PicsumImageURL: Identifiable, Equatable {
     let id: String
     let width: Int
     let height: Int
+
+    var aspectRatio: CGFloat {
+        CGFloat(width) / CGFloat(height)
+    }
 }
 
 extension PicsumImageURL {

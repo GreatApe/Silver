@@ -72,12 +72,11 @@ struct ImageListFeature {
                     return .none
                 }
 
-                state.path.append(.init(url: image.downloadURL))
+                state.path.append(.init(author: image.author, url: image.downloadURL))
                 return .none
 
             case .loadedList(let images):
                 state.sections = images.thumbnailSections()
-                state.status = .loadedList
                 return .none
 
             case .setStatus(let status):
@@ -98,6 +97,7 @@ struct ImageListFeature {
             await send(.setStatus(.loadingList))
             let images = try await apiClient.imageList()
             await send(.loadedList(images))
+            await send(.setStatus(.loadedList))
         } catch: { error, send in
             await send(.setStatus(.failedToLoadList))
         }
